@@ -11,6 +11,10 @@ app.use(express.urlencoded({ extended: true }));
 // ルーティング
 app.use('/', router);
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Welcome!" });
+})
+
 // 3000ポートで受信
 const port = process.env.PORT || 3000;
 
