@@ -1,7 +1,7 @@
 import { Client } from "@notionhq/client";
 import dotenv from 'dotenv';
 import express from 'express';
-
+import { createPage } from "../../lib/notion";
 dotenv.config()
 const router = express.Router();
 
@@ -22,7 +22,17 @@ router.get('/', async (req: express.Request, res: express.Response) => {
   res.status(200).json(pages);
 });
 
-router.post('/', (req: express.Request, res: express.Response) => {
+router.get('/create', async (req: express.Request, res: express.Response) => {
+  const response = await createPage({
+    parentDatabaseId: databaseId!,
+    title: 'まとめ',
+    pageContents: [
+      {
+        heading: 'Storage',
+        content: "hoge"
+      }
+    ]
+  })
   res.status(200).json({ message: "登録しました" });
 });
 
