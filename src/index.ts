@@ -1,15 +1,12 @@
 import express from 'express';
-import router from './routes';
+// import router from './routes';
 
 const app = express();
 
-// JSONオブジェクトの受信設定
 app.use(express.json())
-// 配列側のオブジェクトの受信設定
 app.use(express.urlencoded({ extended: true }));
 
-// ルーティング
-app.use('/', router);
+// app.use('/', router);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome!" });
