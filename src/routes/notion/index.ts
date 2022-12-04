@@ -1,5 +1,5 @@
 import express from 'express';
-import { createPage, getPages } from "../../lib/notion";
+import { createPage, getPages } from "./func";
 const router = express.Router();
 
 router.get('/', async (req: express.Request, res: express.Response) => {
