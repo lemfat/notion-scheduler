@@ -5,13 +5,20 @@ import { CreatePageProps } from "./type";
 dotenv.config()
 
 const NOTION_ACCESS_TOKEN = process.env.NOTION_ACCESS_TOKEN
+const databaseId = process.env.NOTION_DATABASE_ID
 
 const notion = new Client({
   auth: NOTION_ACCESS_TOKEN,
 })
 
+export const getPages = async () => {
+  const response = await notion.databases.query({
+    database_id: databaseId!,
+  });
+  return response.results
+}
+
 export const createPage = async ({
-  parentDatabaseId,
   title,
   pageContents
 }:
@@ -57,7 +64,7 @@ export const createPage = async ({
   const response = await notion.pages.create({
     "parent": {
       "type": "database_id",
-      "database_id": parentDatabaseId
+      "database_id": databaseId!
     },
     "properties": {
       "名前": {

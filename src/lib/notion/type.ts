@@ -2,7 +2,6 @@
 
 // create
 export type CreatePageProps = {
-  parentDatabaseId: string;
   title: string;
   pageContents: PageContent[]
 }
