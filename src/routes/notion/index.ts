@@ -23,7 +23,7 @@ router.get('/', async (req: express.Request, res: express.Response) => {
 });
 
 router.get('/create', async (req: express.Request, res: express.Response) => {
-  const response = await createPage({
+  await createPage({
     parentDatabaseId: databaseId!,
     title: 'まとめ',
     pageContents: [

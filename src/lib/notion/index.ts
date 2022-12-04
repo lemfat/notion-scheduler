@@ -1,5 +1,4 @@
 import { Client } from "@notionhq/client";
-import console from "console";
 import dotenv from 'dotenv';
 import { CreatePageProps } from "./type";
 
@@ -54,9 +53,6 @@ export const createPage = async ({
     }
     children.push(heading, content, blank)
   })
-
-  console.log(children)
-  console.log(pageContents)
 
   const response = await notion.pages.create({
     "parent": {
