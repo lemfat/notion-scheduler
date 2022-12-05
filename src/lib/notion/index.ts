@@ -1,29 +1,47 @@
-import { Client } from "@notionhq/client";
+import axiosBase from "axios";
 import dotenv from 'dotenv';
-import { CreatePageProps } from "./type";
-
 dotenv.config()
 
 const NOTION_ACCESS_TOKEN = process.env.NOTION_ACCESS_TOKEN
-const databaseId = process.env.NOTION_DATABASE_ID
+const database_id = process.env.NOTION_DATABASE_ID
 
-const notion = new Client({
-  auth: NOTION_ACCESS_TOKEN,
+const axios = axiosBase.create({
+  baseURL: 'https://api.notion.com/v1',
+  headers: {
+    "Authorization": `Bearer ${NOTION_ACCESS_TOKEN}`,
+    "Content-Type": 'text/plain;charset=utf-8',
+    "Notion-Version": '2022-06-28',
+  },
+  responseEncoding: 'utf-8',
 })
 
-export const getPages = async () => {
-  const response = await notion.databases.query({
-    database_id: databaseId!,
-  });
-  return response.results
+export async function getPages() {
+  const url = `/databases/${database_id}/query`;
+
+  const data = (await (await axios.post(url)).data)
+
+  console.log(data)
+  return data
 }
 
-export const createPage = async ({
+export type CreatePageProps = {
+  title: string;
+  pageContents: PageContent[]
+}
+
+export type PageContent = {
+  heading: string;
+  content: string;
+}
+
+export async function createPage({
   title,
   pageContents
 }:
   CreatePageProps
-) => {
+) {
+  const url = "https://api.notion.com/v1/pages"
+
   const children: any[] = []
   pageContents.forEach((pc) => {
     const heading = {
@@ -61,10 +79,10 @@ export const createPage = async ({
     children.push(heading, content, blank)
   })
 
-  const response = await notion.pages.create({
+  const data = {
     "parent": {
       "type": "database_id",
-      "database_id": databaseId!
+      "database_id": database_id
     },
     "properties": {
       "名前": {
@@ -78,18 +96,7 @@ export const createPage = async ({
       },
     },
     children: children
-  });
-  return response
-}
-
-export const deleteBlock = async (blockId: string) => {
-  await notion.blocks.delete({
-    block_id: blockId,
-  });
-}
-
-export const deleteBlocks = async (blockIds: string[]) => {
-  for (const blockId of blockIds) {
-    await deleteBlock(blockId);
   }
+
+  await axios.post(url, { data: data })
 }
